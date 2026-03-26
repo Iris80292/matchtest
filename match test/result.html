@@ -28,13 +28,15 @@ const myAnswers = JSON.parse(localStorage.getItem('myAnswers'));
 if (!myAnswers) {
   document.getElementById('link-box').innerText = "未找到答案，请重新答题";
 } else {
-  // 把名字和答案一起打包进链接
+  // 打包名字和答案
   const data = {
     name: userName,
     answers: myAnswers
   };
   const encoded = btoa(JSON.stringify(data));
-  const shareLink = `${location.origin}${location.pathname.replace('result.html','')}quiz.html?id=${encoded}`;
+  
+  // ✅ 修复：用当前页面域名 + 相对路径拼接链接
+  const shareLink = `${window.location.protocol}//${window.location.host}/quiz.html?id=${encoded}`;
   
   document.getElementById('link-box').innerText = shareLink;
 
@@ -42,7 +44,7 @@ if (!myAnswers) {
     navigator.clipboard.writeText(shareLink).then(() => {
       alert("链接复制成功！");
     }).catch(() => {
-      alert("复制失败，请手动复制");
+      alert("复制失败，请手动复制链接");
     });
   };
 }
