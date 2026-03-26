@@ -23,30 +23,34 @@
 const userName = localStorage.getItem('userName') || '某人';
 document.getElementById('resultTitle').innerText = `${userName} 的相性测试`;
 
-const myAnswers = JSON.parse(localStorage.getItem('myAnswers'));
+const myAnswersStr = localStorage.getItem('myAnswers');
 
-if (!myAnswers) {
-  document.getElementById('link-box').innerText = "未找到答案，请重新答题";
+if (!myAnswersStr) {
+  document.getElementById('link-box').innerText = "❌ 未找到答案记录，请重新答题";
 } else {
-  // 打包名字和答案
-  const data = {
-    name: userName,
-    answers: myAnswers
-  };
-  const encoded = btoa(JSON.stringify(data));
-  
-  // ✅ 修复：用当前页面域名 + 相对路径拼接链接
-  const shareLink = `${window.location.protocol}//${window.location.host}/quiz.html?id=${encoded}`;
-  
-  document.getElementById('link-box').innerText = shareLink;
+  try {
+    const myAnswers = JSON.parse(myAnswersStr);
+    const data = { name: userName, answers: myAnswers };
+    
+    // ✅ 修复：支持中文编码（解决你现在的报错）
+    const jsonStr = JSON.stringify(data);
+    const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
 
-  document.getElementById('copyBtn').onclick = () => {
-    navigator.clipboard.writeText(shareLink).then(() => {
-      alert("链接复制成功！");
-    }).catch(() => {
-      alert("复制失败，请手动复制链接");
-    });
-  };
+    const shareLink = `${window.location.protocol}//${window.location.host}/quiz.html?id=${encoded}`;
+    
+    document.getElementById('link-box').innerText = shareLink;
+
+    document.getElementById('copyBtn').onclick = () => {
+      navigator.clipboard.writeText(shareLink).then(() => {
+        alert("✅ 链接复制成功！");
+      }).catch(() => {
+        alert("❌ 复制失败，请手动复制链接");
+      });
+    };
+  } catch (err) {
+    console.error(err);
+    document.getElementById('link-box').innerText = "❌ 生成链接失败，请重新答题";
+  }
 }
 </script>
 </body>
