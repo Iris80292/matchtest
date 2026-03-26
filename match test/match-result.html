@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>默契度结果</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🎯 你们的默契度结果</h1>
+    <p class="desc" id="comment" style="margin-top:10px;">正在生成你们的默契评价...</p>
+
+    <div class="result-item">
+      <h4>🌍 总默契度</h4>
+      <div class="percent" id="total"></div>
+    </div>
+
+    <div class="result-item">
+      <h4>🛋️ 生活习惯默契</h4>
+      <div class="percent" id="life"></div>
+    </div>
+
+    <div class="result-item">
+      <h4>✨ 理想追求默契</h4>
+      <div class="percent" id="dream"></div>
+    </div>
+
+    <div class="result-item">
+      <h4>💼 职业规划默契</h4>
+      <div class="percent" id="career"></div>
+    </div>
+
+    <div class="result-item">
+      <h4>🧠 三观认知默契</h4>
+      <div class="percent" id="value"></div>
+    </div>
+
+    <br>
+    <!-- 好友创建自己测试的按钮 -->
+    <a href="index.html" class="btn" style="background:#10b981;">创建我自己的相性测试</a>
+
+    <a href="index.html" class="btn" style="background:#6c757d; margin-top:10px;">返回首页</a>
+  </div>
+
+<script>
+  const res = JSON.parse(localStorage.getItem('matchResult'));
+  if (res) {
+    document.getElementById('total').innerText = res.total + '%';
+    document.getElementById('life').innerText = res.life + '%';
+    document.getElementById('dream').innerText = res.dream + '%';
+    document.getElementById('career').innerText = res.career + '%';
+    document.getElementById('value').innerText = res.value + '%';
+
+    const total = Number(res.total);
+    let comment = '';
+    if (total >= 80) comment = '🔥 灵魂伴侣！你们简直是对方的翻版！';
+    else if (total >= 60) comment = '😊 非常合拍，是很懂彼此的人～';
+    else if (total >= 40) comment = '🙂 普通朋友默契，还有不少差异哦';
+    else comment = '😮 差异巨大，你们是来互相挑战的吗！';
+    document.getElementById('comment').innerText = comment;
+  }
+</script>
+</body>
+</html>
